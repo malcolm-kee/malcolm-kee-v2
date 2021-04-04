@@ -21,5 +21,7 @@ export const prepareMdx = (source: string) => {
     }
   }
 
+  console.log('ESBUILD_BINARY_PATH', process.env.ESBUILD_BINARY_PATH);
+
   return bundleMDX(source);
 };
