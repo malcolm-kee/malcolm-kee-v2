@@ -1,9 +1,9 @@
 import { Seo } from 'components/seo';
-import Link from 'next/link';
 import fs from 'fs';
 import glob from 'glob';
-import { bundleMDX } from 'mdx-bundler';
+import { prepareMdx } from 'lib/prepare-mdx';
 import type { GetStaticProps } from 'next';
+import Link from 'next/link';
 import path from 'path';
 
 interface Article {
@@ -53,7 +53,7 @@ export const getStaticProps: GetStaticProps<TodayILearntListingProps> = async fu
   const mdxPaths = glob.sync(`${tilPath}/**/*.{md,mdx}`);
   const mdxResults = await Promise.all(
     mdxPaths.map((filePath) =>
-      fs.promises.readFile(filePath, 'utf-8').then(bundleMDX)
+      fs.promises.readFile(filePath, 'utf-8').then(prepareMdx)
     )
   );
 

@@ -1,7 +1,7 @@
+import { Seo } from 'components/seo';
 import fs from 'fs';
 import glob from 'glob';
-import { bundleMDX } from 'mdx-bundler';
-import { Seo } from 'components/seo';
+import { prepareMdx } from 'lib/prepare-mdx';
 import { getMDXComponent } from 'mdx-bundler/client';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import path from 'path';
@@ -56,7 +56,7 @@ export const getStaticProps: GetStaticProps<
       path.resolve(tilPath, `${params.slug}.mdx`),
       'utf-8'
     );
-    const mdxResult = await bundleMDX(fileContent);
+    const mdxResult = await prepareMdx(fileContent);
 
     return {
       props: {
