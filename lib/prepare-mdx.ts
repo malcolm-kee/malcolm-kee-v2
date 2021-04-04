@@ -2,9 +2,10 @@ import { bundleMDX } from 'mdx-bundler';
 import path from 'path';
 
 export const prepareMdx = (source: string) => {
-  console.log(__dirname, '__dirname');
   console.log('cwd', process.cwd());
-  if (__dirname === '' && !process.env.ESBUILD_BINARY_PATH) {
+  console.log(__dirname, '__dirname');
+
+  if (process.env.NETLIFY && !process.env.ESBUILD_BINARY_PATH) {
     if (process.platform === 'win32') {
       process.env.ESBUILD_BINARY_PATH = path.join(
         process.cwd(),
