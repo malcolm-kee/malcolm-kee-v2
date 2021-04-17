@@ -1,4 +1,5 @@
 import { bundleMDX } from 'mdx-bundler';
+import highlight from 'rehype-highlight';
 import path from 'path';
 
 export const prepareMdx = (source: string) => {
@@ -21,5 +22,10 @@ export const prepareMdx = (source: string) => {
     }
   }
 
-  return bundleMDX(source);
+  return bundleMDX(source, {
+    xdmOptions(_, options) {
+      options.rehypePlugins = [...(options.rehypePlugins ?? []), highlight];
+      return options;
+    },
+  });
 };

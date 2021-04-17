@@ -2,9 +2,9 @@ import { Seo } from 'components/seo';
 
 export default function Home() {
   return (
-    <div>
+    <div className="h-full flex flex-col">
       <Seo />
-      <main>
+      <main className="flex-1">
         <div className="px-4 sm:px-6 pt-8 pb-12 bg-gray-900 text-white">
           <div className="max-w-7xl mx-auto space-y-12">
             <h1 className="text-4xl sm:text-5xl lg:text-7xl text-center text-green-500 font-bold">
@@ -51,7 +51,7 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className="py-6 px-4 sm:px-6">
+      <footer className="py-6 px-4 sm:px-6 flex-shrink-0">
         <div className="max-w-7xl mx-auto text-center">
           <small>Copyright Malcolm Kee. All rights reserved.</small>
         </div>

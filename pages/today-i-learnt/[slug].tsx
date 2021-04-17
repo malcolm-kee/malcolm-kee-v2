@@ -1,8 +1,10 @@
+import { MdxRenderer } from 'components/mdx-renderer';
 import { Seo } from 'components/seo';
+import Link from 'next/link';
+import { PageContainer } from 'components/page-container';
 import fs from 'fs';
 import glob from 'glob';
 import { prepareMdx } from 'lib/prepare-mdx';
-import { getMDXComponent } from 'mdx-bundler/client';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import path from 'path';
 import * as React from 'react';
@@ -11,28 +13,28 @@ interface TodayILearntProps {
   mdx?: MdxResult;
 }
 
-const components = {
-  code: function Code({ children }: { children?: React.ReactNode }) {
-    return <code className="language-text">{children}</code>;
-  },
-};
-
 function TodayILearnt({ mdx }: TodayILearntProps) {
-  const Component = React.useMemo(
-    () => (mdx ? getMDXComponent(mdx.code) : null),
-    [mdx]
-  );
-
   return (
-    <div className="px-4 sm:px-6 py-6">
-      {mdx && <Seo title={`TIL ${mdx.frontmatter.title} - Malcolm Kee`} />}
-      <article className="pb-12">
-        <div className="prose max-w-prose mx-auto">
-          {mdx && <h1>{mdx.frontmatter.title}</h1>}
-          {Component && <Component components={components} />}
-        </div>
-      </article>
-    </div>
+    <PageContainer>
+      <div className="px-4 sm:px-6 py-6">
+        {mdx && <Seo title={`TIL ${mdx.frontmatter.title} - Malcolm Kee`} />}
+        <main>
+          <article className="pb-12">
+            <div className="prose max-w-prose mx-auto">
+              {mdx && <h1>{mdx.frontmatter.title}</h1>}
+              {mdx && <MdxRenderer code={mdx.code} />}
+            </div>
+          </article>
+        </main>
+        <nav className="max-w-prose mx-auto">
+          <Link href="/today-i-learnt">
+            <a className="text-2xl font-medium text-green-500 hover:underline">
+              {'<'} All TIL
+            </a>
+          </Link>
+        </nav>
+      </div>
+    </PageContainer>
   );
 }
 

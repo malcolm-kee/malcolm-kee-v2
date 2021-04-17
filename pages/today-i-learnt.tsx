@@ -1,4 +1,5 @@
 import { Seo } from 'components/seo';
+import { PageContainer } from 'components/page-container';
 import fs from 'fs';
 import glob from 'glob';
 import { prepareMdx } from 'lib/prepare-mdx';
@@ -22,28 +23,30 @@ interface TodayILearntListingProps {
 
 function TodayILearntListing(props: TodayILearntListingProps) {
   return (
-    <div className="px-4 sm:px-6 py-6">
-      <Seo title="Today I Learnt - Malcolm Kee" />
-      <main className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-extrabold mb-3">Today I Learnt</h1>
-        <div className="grid gap-12 sm:grid-cols-2 md:grid-cols-3 py-3">
-          {props.categories.map(({ title, articles }) => (
-            <section key={title}>
-              <h2 className="text-xl font-mono mb-2">{title}</h2>
-              <ul className="space-y-3">
-                {articles.map((article) => (
-                  <li key={article.url}>
-                    <Link href={article.url}>
-                      <a className="hover:underline">{article.title}</a>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ))}
-        </div>
-      </main>
-    </div>
+    <PageContainer>
+      <div className="px-4 sm:px-6 py-6">
+        <Seo title="Today I Learnt - Malcolm Kee" />
+        <main className="max-w-7xl mx-auto">
+          <h1 className="text-4xl font-extrabold mb-3">Today I Learnt</h1>
+          <div className="grid gap-12 sm:grid-cols-2 md:grid-cols-3 py-3">
+            {props.categories.map(({ title, articles }) => (
+              <section key={title}>
+                <h2 className="text-xl font-mono mb-2">{title}</h2>
+                <ul className="space-y-3">
+                  {articles.map((article) => (
+                    <li key={article.url}>
+                      <Link href={article.url}>
+                        <a className="hover:underline">{article.title}</a>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </div>
+        </main>
+      </div>
+    </PageContainer>
   );
 }
 
