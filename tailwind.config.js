@@ -1,21 +1,28 @@
 module.exports = {
-  purge: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+  purge: [
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
+    './blogs/**/*.md',
+    './til/**/*.mdx',
+  ],
   darkMode: false, // or 'media' or 'class'
+  mode: 'jit',
   theme: {
     extend: {
-      typography: {
+      typography: (theme) => ({
         DEFAULT: {
           css: {
             a: {
               textDecoration: 'none',
               fontWeight: 'normal',
+              color: theme('colors.green.600'),
               '&:hover': {
                 textDecoration: 'underline',
               },
             },
           },
         },
-      },
+      }),
     },
   },
   variants: {

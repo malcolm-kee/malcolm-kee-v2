@@ -6,3 +6,7 @@ body {
 #__next {
   height: 100%;
 }
+
+.focus-ring {
+  @apply focus:outline-none focus-visible:ring focus-visible:ring-offset-2 focus-visible:ring-green-200;
+}

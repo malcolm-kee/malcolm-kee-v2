@@ -15,7 +15,7 @@ export const PageContainer = (props: PageContainerProps) => {
           </Link>
         </div>
       </header>
-      <div className="flex-1">{props.children}</div>
+      <div className="flex-1 bg-gray-50">{props.children}</div>
       <footer className="py-6 px-4 sm:px-6 flex-shrink-0">
         <div className="max-w-7xl mx-auto text-center">
           <small>Copyright Malcolm Kee. All rights reserved.</small>
