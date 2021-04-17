@@ -1,6 +1,6 @@
 import { bundleMDX } from 'mdx-bundler';
-import highlight from 'rehype-highlight';
 import path from 'path';
+import { rehypeMetaAsAttribute } from './rehype-meta-as-attribute';
 
 export const prepareMdx = (source: string) => {
   if (process.env.NETLIFY && !process.env.ESBUILD_BINARY_PATH) {
@@ -24,7 +24,10 @@ export const prepareMdx = (source: string) => {
 
   return bundleMDX(source, {
     xdmOptions(_, options) {
-      options.rehypePlugins = [...(options.rehypePlugins ?? []), highlight];
+      options.rehypePlugins = [
+        ...(options.rehypePlugins ?? []),
+        rehypeMetaAsAttribute,
+      ];
       return options;
     },
   });
