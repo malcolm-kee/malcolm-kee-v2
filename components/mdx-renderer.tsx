@@ -1,10 +1,11 @@
-import { getMDXComponent } from 'mdx-bundler/client';
+import { getMDXComponent, ComponentMap } from 'mdx-bundler/client';
 import cx from 'classnames';
 import * as React from 'react';
 import { CodeRenderer } from './code-renderer';
 
 export interface MdxRendererProps {
   code: string;
+  components?: ComponentMap;
 }
 
 const components = {
@@ -30,12 +31,26 @@ const components = {
   code: Code,
 };
 
-export const MdxRenderer = ({ code }: MdxRendererProps) => {
+export const MdxRenderer = ({
+  code,
+  components: providedComponents,
+}: MdxRendererProps) => {
   const Component = React.useMemo(() => (code ? getMDXComponent(code) : null), [
     code,
   ]);
 
-  return Component && <Component components={components} />;
+  const allComponents = React.useMemo(
+    () =>
+      providedComponents
+        ? {
+            ...components,
+            ...providedComponents,
+          }
+        : components,
+    [providedComponents]
+  );
+
+  return Component && <Component components={allComponents} />;
 };
 
 const IsInlineCodeContext = React.createContext(true);
