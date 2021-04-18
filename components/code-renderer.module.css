@@ -1,0 +1,12 @@
+.logOutputContainer {
+  width: 100%;
+  overflow: auto;
+}
+
+.logOutput {
+  line-height: 1.75;
+}
+
+.logOutput::before {
+  content: '> ';
+}

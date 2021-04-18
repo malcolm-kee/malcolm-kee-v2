@@ -30,5 +30,10 @@ export const prepareMdx = (source: string) => {
       ];
       return options;
     },
+    esbuildOptions(options) {
+      options.target = ['es2020', 'chrome58', 'firefox57'];
+
+      return options;
+    },
   });
 };

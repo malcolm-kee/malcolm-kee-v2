@@ -1,6 +1,7 @@
 import { getMDXComponent } from 'mdx-bundler/client';
-import { CodeSnippet } from './code-snippet';
+import cx from 'classnames';
 import * as React from 'react';
+import { CodeRenderer } from './code-renderer';
 
 export interface MdxRendererProps {
   code: string;
@@ -44,18 +45,15 @@ function Code(props: {
   children?: React.ReactNode;
   className?: string;
   highlightedLines?: string;
+  live?: boolean;
 }) {
   const isInlineCode = React.useContext(IsInlineCodeContext);
 
   if (!isInlineCode) {
-    const language = props.className && props.className.split('-')[1];
-
     return (
-      <CodeSnippet
-        code={props.children as string}
-        language={language as any}
-        highlightedLines={props.highlightedLines}
-        className="lg:-mx-24 xl:-mx-36"
+      <CodeRenderer
+        {...props}
+        className={cx(props.className, 'lg:-mx-24 xl:-mx-36')}
       />
     );
   }

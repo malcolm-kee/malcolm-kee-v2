@@ -21,11 +21,10 @@ const codeRunner = new Function(
     var y = 100;
     log(x + y);
     log(minus(x, y));
-` // string to be evaluated as code
+`
 );
 
-codeRunner(logFn, minusFn);
-// provide the `log` and `minus` parameter
+codeRunner(logFn, minusFn); // provide the `log` and `minus` parameter
 ```
 
 The difference of `Function` constructor and `eval` is that `eval` has access to local variable where you run it, while `Function` constructor only has access to the parameters provided and global variables only.
