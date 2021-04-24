@@ -1,4 +1,5 @@
 import { MdxRenderer } from 'components/mdx-renderer';
+import { WorkshopMenu } from 'components/workshop-menu';
 import cx from 'classnames';
 import { Seo } from 'components/seo';
 import fs from 'fs';
@@ -8,10 +9,12 @@ import Link from 'next/link';
 import workshopData from '../../workshop-lesson.json';
 import { workshopDetails } from 'config/workshop.const';
 import * as React from 'react';
+import styles from './lesson.module.css';
 
 interface WorkshopLessonProps {
   mdx?: MdxResult;
   params?: Params;
+  allLessons?: Array<LessonInfo>;
   nextLesson?: LessonInfo;
   prevLesson?: LessonInfo;
 }
@@ -19,6 +22,7 @@ interface WorkshopLessonProps {
 function WorkshopLesson({
   mdx,
   params,
+  allLessons = [],
   prevLesson,
   nextLesson,
 }: WorkshopLessonProps) {
@@ -31,51 +35,59 @@ function WorkshopLesson({
   return (
     <div className="h-full flex flex-col">
       <header
-        className={cx(
-          'py-4 px-4 sm:px-6 flex-shrink-0',
-          workshopInfo.className
-        )}
+        className={cx('px-4 sm:px-6 flex-shrink-0', workshopInfo.className)}
       >
-        <div className="max-w-7xl mx-auto text-right">
+        <div
+          className={cx(
+            'max-w-7xl mx-auto flex items-center justify-end',
+            styles.header
+          )}
+        >
           <Link href="/">
             <a className="text-2xl md:text-3xl">{workshopInfo.name}</a>
           </Link>
         </div>
       </header>
-      <div className="px-4 sm:px-6 py-6">
-        {mdx && (
-          <Seo title={`${mdx.frontmatter.title} - ${workshopInfo.name}`} />
-        )}
-        <main>
+      <div className="md:flex">
+        <WorkshopMenu items={allLessons} />
+        <div className={`md:flex-1 px-4 sm:px-6 py-6 ${styles.wrapper}`}>
           {mdx && (
-            <article className="pb-12">
-              <div className="prose max-w-prose mx-auto">
-                <h1>{mdx.frontmatter.title}</h1>
-                <MdxRenderer code={mdx.code} components={injectedComponents} />
-              </div>
-            </article>
+            <Seo title={`${mdx.frontmatter.title} - ${workshopInfo.name}`} />
           )}
-        </main>
-        <nav className="flex justify-between items-center max-w-prose mx-auto">
-          {prevLesson ? (
-            <Link href={`/${prevLesson.workshop}/${prevLesson.slug}`}>
-              <a className="text-2xl font-medium text-green-500 hover:underline">
-                {'<'}
-              </a>
-            </Link>
-          ) : (
-            <span />
-          )}
-          {nextLesson ? (
-            <Link href={`/${nextLesson.workshop}/${nextLesson.slug}`}>
-              <a className="text-2xl font-medium text-green-500 hover:underline">
-                {'>'}
-              </a>
-            </Link>
-          ) : (
-            <span />
-          )}
-        </nav>
+          <main className="w-full">
+            {mdx && (
+              <article className={`pb-12 ${styles.article}`}>
+                <div className="prose max-w-prose mx-auto">
+                  <h1>{mdx.frontmatter.title}</h1>
+                  <MdxRenderer
+                    code={mdx.code}
+                    components={injectedComponents}
+                  />
+                </div>
+              </article>
+            )}
+          </main>
+          <nav className="flex justify-between items-center max-w-prose mx-auto">
+            {prevLesson ? (
+              <Link href={`/${prevLesson.workshop}/${prevLesson.slug}`}>
+                <a className="text-2xl font-medium text-green-500 hover:underline">
+                  {'<'}
+                </a>
+              </Link>
+            ) : (
+              <span />
+            )}
+            {nextLesson ? (
+              <Link href={`/${nextLesson.workshop}/${nextLesson.slug}`}>
+                <a className="text-2xl font-medium text-green-500 hover:underline">
+                  {'>'}
+                </a>
+              </Link>
+            ) : (
+              <span />
+            )}
+          </nav>
+        </div>
       </div>
     </div>
   );
@@ -137,6 +149,7 @@ export const getStaticProps: GetStaticProps<
         props: {
           mdx: mdxResult,
           params,
+          allLessons: lessons,
           prevLesson: lessons[lessonIndex - 1] || null,
           nextLesson: lessons[lessonIndex + 1] || null,
         },

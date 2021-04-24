@@ -1,0 +1,23 @@
+.wrapper {
+  height: 100%;
+  height: calc(100vh - 68px);
+  overflow-y: auto;
+}
+
+.article {
+  display: grid;
+  grid-template-columns: 1fr min(65ch, 100%) 1fr;
+}
+
+.article > * {
+  grid-column: 2;
+}
+
+.full-bleed {
+  width: 100%;
+  grid-column: 1 / 4;
+}
+
+.header {
+  height: 68px;
+}
