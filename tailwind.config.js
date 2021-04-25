@@ -4,6 +4,7 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}',
     './blogs/**/*.md',
     './til/**/*.mdx',
+    './workshops/**/*.{js,jsx,mdx}',
     './config/**/*.ts',
   ],
   darkMode: false, // or 'media' or 'class'

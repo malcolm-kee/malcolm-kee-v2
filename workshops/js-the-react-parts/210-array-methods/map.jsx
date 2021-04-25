@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { Button } from '../../../src/components/Button';
-import { Box, Circle } from '../../../src/components/shapes';
-import './map.scss';
+import styled from '@emotion/styled';
 
 export function MapAnimation() {
   const [runState, setRunState] = React.useState('not_run');
@@ -27,15 +25,14 @@ export function MapAnimation() {
       </div>
       <div className="my-2 h-12 flex justify-center items-center">
         {runState !== 'running' && (
-          <Button
-            color="primary"
-            raised
+          <button
+            type="button"
             onClick={() =>
               setRunState(runState === 'not_run' ? 'running' : 'not_run')
             }
           >
             {runState === 'complete' ? 'Restart' : 'Run'}
-          </Button>
+          </button>
         )}
       </div>
     </div>

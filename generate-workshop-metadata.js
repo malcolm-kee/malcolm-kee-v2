@@ -11,21 +11,20 @@ const workshopPath = path
   .split(path.sep)
   .join('/');
 
-const workshopLessonRegex = /(?<workshop>(\-|\w)+)\/(?<slug>(\-|\w)+)\.mdx?$/;
-
 (async function generateWorkshopMetadata() {
   const markdownPaths = await asyncGlob(`${workshopPath}/**/*.mdx`);
 
   const mdDetails = await Promise.all(
     markdownPaths.map(async (mdPath) => {
+      const relativePath = path.relative(workshopPath, mdPath);
+      const workshop = relativePath.split('/')[0];
       const frontMatter = frontmatter(await fs.readFile(mdPath, 'utf-8')).data;
-      const match = workshopLessonRegex.exec(mdPath);
 
       return {
         frontMatter,
         path: mdPath,
-        slug: match.groups.slug,
-        workshop: match.groups.workshop,
+        slug: path.parse(mdPath).name,
+        workshop,
       };
     })
   );

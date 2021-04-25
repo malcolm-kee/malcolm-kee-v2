@@ -3,6 +3,7 @@ import { WorkshopMenu } from 'components/workshop-menu';
 import cx from 'classnames';
 import { Seo } from 'components/seo';
 import fs from 'fs';
+import path from 'path';
 import { prepareMdx } from 'lib/prepare-mdx';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Link from 'next/link';
@@ -139,11 +140,25 @@ export const getStaticProps: GetStaticProps<
     );
 
     if (lessonIndex > -1) {
-      const fileContent = await fs.promises.readFile(
-        lessons[lessonIndex].path,
-        'utf-8'
-      );
-      const mdxResult = await prepareMdx(fileContent);
+      const filePath = lessons[lessonIndex].path;
+
+      const pathInfo = path.parse(filePath);
+
+      const files = await fs.promises.readdir(pathInfo.dir);
+      const jsFiles = files.filter((f) => /\.jsx?$/.test(f));
+
+      const fileData: Record<string, string> = {};
+
+      for (const jsFile of jsFiles) {
+        const jsFileContent = await fs.promises.readFile(
+          path.resolve(pathInfo.dir, jsFile),
+          'utf-8'
+        );
+        fileData[`./${jsFile}`] = jsFileContent;
+      }
+
+      const fileContent = await fs.promises.readFile(filePath, 'utf-8');
+      const mdxResult = await prepareMdx(fileContent, { files: fileData });
 
       return {
         props: {

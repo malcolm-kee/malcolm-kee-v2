@@ -1,8 +1,12 @@
 import { bundleMDX } from 'mdx-bundler';
 import path from 'path';
+import gfm from 'remark-gfm';
 import { rehypeMetaAsAttribute } from './rehype-meta-as-attribute';
 
-export const prepareMdx = (source: string) => {
+export const prepareMdx = (
+  source: string,
+  options: { files?: Record<string, string> } = {}
+) => {
   if (process.env.NETLIFY && !process.env.ESBUILD_BINARY_PATH) {
     if (process.platform === 'win32') {
       process.env.ESBUILD_BINARY_PATH = path.join(
@@ -23,7 +27,9 @@ export const prepareMdx = (source: string) => {
   }
 
   return bundleMDX(source, {
+    files: options.files,
     xdmOptions(_, options) {
+      options.remarkPlugins = [...(options.remarkPlugins ?? []), gfm];
       options.rehypePlugins = [
         ...(options.rehypePlugins ?? []),
         rehypeMetaAsAttribute,
