@@ -2,6 +2,7 @@ import { bundleMDX } from 'mdx-bundler';
 import path from 'path';
 import gfm from 'remark-gfm';
 import { rehypeMetaAsAttribute } from './rehype-meta-as-attribute';
+import rehypeSlug from 'rehype-slug';
 
 export const prepareMdx = (
   source: string,
@@ -34,6 +35,7 @@ export const prepareMdx = (
       options.rehypePlugins = [
         ...(options.rehypePlugins ?? []),
         rehypeMetaAsAttribute,
+        rehypeSlug,
       ];
       return options;
     },

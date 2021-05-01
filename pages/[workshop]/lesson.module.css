@@ -1,7 +1,14 @@
+@screen md {
+  .wrapper,
+  .menu {
+    height: 100%;
+    height: calc(100vh - 68px);
+    overflow-y: auto;
+  }
+}
+
 .wrapper {
-  height: 100%;
-  height: calc(100vh - 68px);
-  overflow-y: auto;
+  flex-basis: 0;
 }
 
 .article {
@@ -13,7 +20,7 @@
   grid-column: 2;
 }
 
-.full-bleed {
+.fullBleed {
   width: 100%;
   grid-column: 1 / 4;
 }

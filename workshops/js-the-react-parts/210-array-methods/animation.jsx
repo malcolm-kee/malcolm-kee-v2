@@ -5,6 +5,8 @@ import * as React from 'react';
 export function FilterAnimation() {
   const [runState, setRunState] = React.useState('not_run');
 
+  const isActivated = runState !== 'not_run';
+
   return (
     <div>
       <div
@@ -14,16 +16,51 @@ export function FilterAnimation() {
         )}
         id="filter-demo"
       >
-        <div className="box-container">
-          <Box className="box" />
-          <Circle className="box filtered" />
-          <Box className="box" />
-          <Box className="box" />
+        <div className="h-full relative">
+          <Box
+            className={cx(
+              isActivated
+                ? 'left-full transition-all'
+                : 'left-2 transition-none'
+            )}
+            style={{ top: tops[0] }}
+          />
           <Circle
-            className="box filtered"
+            className={cx(
+              isActivated
+                ? 'left-full transition-all'
+                : 'left-2 transition-none'
+            )}
+            transparent={isActivated}
+            style={{ top: tops[1] }}
+          />
+          <Box
+            className={cx(
+              isActivated
+                ? 'left-full transition-all'
+                : 'left-2 transition-none'
+            )}
+            style={{ top: tops[2] }}
+          />
+          <Box
+            className={cx(
+              isActivated
+                ? 'left-full transition-all'
+                : 'left-2 transition-none'
+            )}
+            style={{ top: tops[3] }}
+          />
+          <Circle
+            className={cx(
+              isActivated
+                ? 'left-full transition-all'
+                : 'left-2 transition-none'
+            )}
+            transparent={isActivated}
             onTransitionEnd={() =>
               runState === 'running' && setRunState('complete')
             }
+            style={{ top: tops[4] }}
           />
         </div>
       </div>
@@ -59,48 +96,48 @@ export function MapAnimation() {
         <div className="h-full relative">
           <Box
             className={cx(
-              'box filter bg-green-500 ease-linear duration-1000',
+              'box filter bg-green-500',
               isActivated
                 ? 'left-full hue-rotate-90 transition-all'
                 : 'left-2 hue-rotate-0 transition-none'
             )}
-            style={{ top: 8 }}
+            style={{ top: tops[0] }}
           />
           <Circle
             className={cx(
-              'filter transform shrinked bg-blue-500 ease-linear duration-1000',
+              'filter transform shrinked bg-blue-500',
               isActivated
                 ? 'left-full hue-rotate-90 transition-all scale-50'
                 : 'left-2 hue-rotate-0 transition-none scale-100'
             )}
-            style={{ top: 40 }}
+            style={{ top: tops[1] }}
           />
           <Box
             className={cx(
-              'filter bg-yellow-600 ease-linear duration-1000',
+              'filter bg-yellow-600',
               isActivated
                 ? 'left-full hue-rotate-90 transition-all'
                 : 'left-2 hue-rotate-0 transition-none'
             )}
-            style={{ top: 72 }}
+            style={{ top: tops[2] }}
           />
           <Box
             className={cx(
-              'filter bg-red-500 ease-linear duration-1000',
+              'filter bg-red-500',
               isActivated
                 ? 'left-full hue-rotate-90 transition-all'
                 : 'left-2 hue-rotate-0 transition-none'
             )}
-            style={{ top: 104 }}
+            style={{ top: tops[3] }}
           />
           <Circle
             className={cx(
-              'filter transform bg-purple-500 ease-linear duration-1000',
+              'filter transform bg-purple-500',
               isActivated
                 ? 'left-full hue-rotate-90 transition-all scale-50'
                 : 'left-2 hue-rotate-0 transition-none scale-100'
             )}
-            style={{ top: 136 }}
+            style={{ top: tops[4] }}
             onTransitionEnd={() =>
               runState === 'running' && setRunState('complete')
             }
@@ -164,7 +201,9 @@ const Box = styled.div`
   position: absolute;
   width: 25px;
   height: 25px;
-  border: 1px solid;
+  border: 1px solid #000;
+  transition-duration: 1s;
+  transition-timing-function: linear;
 `;
 
 const Circle = styled.div`
@@ -172,5 +211,10 @@ const Circle = styled.div`
   width: 25px;
   height: 25px;
   border: 1px solid;
+  border-color: ${({ transparent }) => (transparent ? 'transparent' : '#000')};
   border-radius: 50%;
+  transition-duration: 1s;
+  transition-timing-function: linear;
 `;
+
+const tops = [8, 40, 72, 104, 136];

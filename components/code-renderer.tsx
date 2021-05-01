@@ -104,7 +104,7 @@ const CodeLiveEditor = ({
         </button>
       </div>
 
-      <div className="text-sm">
+      <div className="text-sm w-full">
         <LiveProvider
           code={removeHighlightComment(code)}
           transformCode={language === 'js' ? wrapJsCode : undefined}

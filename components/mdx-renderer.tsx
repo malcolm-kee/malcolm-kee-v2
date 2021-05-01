@@ -56,7 +56,7 @@ export const MdxRenderer = ({
   return Component && <Component components={allComponents} />;
 };
 
-const IsInlineCodeContext = React.createContext(true);
+export const IsInlineCodeContext = React.createContext(true);
 IsInlineCodeContext.displayName = 'IsInlineCodeContext';
 
 function Code(props: {

@@ -1,16 +1,19 @@
-import { MdxRenderer } from 'components/mdx-renderer';
-import { WorkshopMenu } from 'components/workshop-menu';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline';
 import cx from 'classnames';
-import { Seo } from 'components/seo';
 import { CodeGlobalsContext } from 'components/code-globals';
+import { CodeRenderer } from 'components/code-renderer';
+import { IsInlineCodeContext, MdxRenderer } from 'components/mdx-renderer';
+import { Seo } from 'components/seo';
+import { WorkshopMenu } from 'components/workshop-menu';
+import { workshopDetails } from 'config/workshop.const';
 import fs from 'fs';
-import path from 'path';
 import { prepareMdx } from 'lib/prepare-mdx';
+import { useScrollTopOnNavigate } from 'lib/use-scroll-top-on-navigate';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Link from 'next/link';
-import workshopData from '../../workshop-lesson.json';
-import { workshopDetails } from 'config/workshop.const';
+import path from 'path';
 import * as React from 'react';
+import workshopData from '../../workshop-lesson.json';
 import styles from './lesson.module.css';
 
 interface WorkshopLessonProps {
@@ -28,6 +31,8 @@ function WorkshopLesson({
   prevLesson,
   nextLesson,
 }: WorkshopLessonProps) {
+  const scrollableEl = useScrollTopOnNavigate<HTMLDivElement>();
+
   if (!params) {
     return null;
   }
@@ -51,31 +56,38 @@ function WorkshopLesson({
         </div>
       </header>
       <div className="md:flex">
-        <WorkshopMenu items={allLessons} className={styles.wrapper} />
-        <div className={`md:flex-1 px-4 sm:px-6 py-6 ${styles.wrapper}`}>
+        <WorkshopMenu
+          workshopName={workshopInfo.name}
+          items={allLessons}
+          className={styles.menu}
+        />
+        <div
+          className={`md:flex-1 px-4 sm:px-6 pt-6 pb-16 md:pb-6 ${styles.wrapper}`}
+          ref={scrollableEl}
+        >
           {mdx && (
             <Seo title={`${mdx.frontmatter.title} - ${workshopInfo.name}`} />
           )}
-          <main className="w-full">
+          <main className="w-full overflow-x-hidden">
             {mdx && (
-              <article className={`pb-12 ${styles.article}`}>
-                <div className="prose max-w-prose mx-auto">
-                  <h1>{mdx.frontmatter.title}</h1>
-                  <CodeGlobalsContext.Provider value={globals}>
-                    <MdxRenderer
-                      code={mdx.code}
-                      components={injectedComponents}
-                    />
-                  </CodeGlobalsContext.Provider>
-                </div>
+              <article
+                className={`pb-12 relative prose max-w-full ${styles.article}`}
+              >
+                <h1>{mdx.frontmatter.title}</h1>
+                <CodeGlobalsContext.Provider value={globals}>
+                  <MdxRenderer
+                    code={mdx.code}
+                    components={injectedComponents}
+                  />
+                </CodeGlobalsContext.Provider>
               </article>
             )}
           </main>
           <nav className="flex justify-between items-center max-w-prose mx-auto">
             {prevLesson ? (
               <Link href={`/${prevLesson.workshop}/${prevLesson.slug}`}>
-                <a className="text-2xl font-medium text-green-500 hover:underline">
-                  {'<'}
+                <a className="inline-flex items-center space-x-2 text-2xl text-green-500 hover:underline">
+                  <ChevronLeftIcon className="w-6 h-6" /> Prev
                 </a>
               </Link>
             ) : (
@@ -83,8 +95,8 @@ function WorkshopLesson({
             )}
             {nextLesson ? (
               <Link href={`/${nextLesson.workshop}/${nextLesson.slug}`}>
-                <a className="text-2xl font-medium text-green-500 hover:underline">
-                  {'>'}
+                <a className="inline-flex items-center space-x-2 text-2xl text-green-500 hover:underline">
+                  Next <ChevronRightIcon className="w-6 h-6" />
                 </a>
               </Link>
             ) : (
@@ -109,6 +121,18 @@ const Exercise = ({
       {title && <h3 className="text-lg mb-2">{title}</h3>}
       {children}
     </section>
+  );
+};
+
+/**
+ * Workaround while we have conflict between prettier format and mdx.
+ */
+const Details = (props: { children?: React.ReactNode; summary?: string }) => {
+  return (
+    <details>
+      <summary>{props.summary}</summary>
+      {props.children}
+    </details>
   );
 };
 
@@ -155,8 +179,49 @@ const globals = {
   ajax,
 };
 
+function LessonCode(props: {
+  children?: React.ReactNode;
+  className?: string;
+  highlightedLines?: string;
+  live?: boolean;
+}) {
+  const isInlineCode = React.useContext(IsInlineCodeContext);
+
+  if (!isInlineCode) {
+    return (
+      <CodeRenderer
+        {...props}
+        className={cx(props.className, styles.fullBleed)}
+      />
+    );
+  }
+
+  return <code {...props} />;
+}
+
 const injectedComponents = {
   Exercise,
+  Details,
+  pre: function Pre({ children }: { children?: React.ReactNode }) {
+    const isCodeSnippet =
+      React.Children.count(children) === 1 &&
+      React.Children.toArray(children).every(
+        (child) => React.isValidElement(child) && child.type === LessonCode
+      );
+
+    if (isCodeSnippet) {
+      return (
+        <>
+          <IsInlineCodeContext.Provider value={false}>
+            {children}
+          </IsInlineCodeContext.Provider>
+        </>
+      );
+    }
+
+    return <pre>{children}</pre>;
+  },
+  code: LessonCode,
 };
 
 interface MdxResult {

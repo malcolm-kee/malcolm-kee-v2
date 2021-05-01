@@ -5,3 +5,8 @@
 .content {
   direction: ltr;
 }
+
+.mobileMenu {
+  height: calc(100vh - 48px);
+  overflow-y: auto;
+}
