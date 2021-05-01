@@ -2,6 +2,7 @@ import { MdxRenderer } from 'components/mdx-renderer';
 import { WorkshopMenu } from 'components/workshop-menu';
 import cx from 'classnames';
 import { Seo } from 'components/seo';
+import { CodeGlobalsContext } from 'components/code-globals';
 import fs from 'fs';
 import path from 'path';
 import { prepareMdx } from 'lib/prepare-mdx';
@@ -50,7 +51,7 @@ function WorkshopLesson({
         </div>
       </header>
       <div className="md:flex">
-        <WorkshopMenu items={allLessons} />
+        <WorkshopMenu items={allLessons} className={styles.wrapper} />
         <div className={`md:flex-1 px-4 sm:px-6 py-6 ${styles.wrapper}`}>
           {mdx && (
             <Seo title={`${mdx.frontmatter.title} - ${workshopInfo.name}`} />
@@ -60,10 +61,12 @@ function WorkshopLesson({
               <article className={`pb-12 ${styles.article}`}>
                 <div className="prose max-w-prose mx-auto">
                   <h1>{mdx.frontmatter.title}</h1>
-                  <MdxRenderer
-                    code={mdx.code}
-                    components={injectedComponents}
-                  />
+                  <CodeGlobalsContext.Provider value={globals}>
+                    <MdxRenderer
+                      code={mdx.code}
+                      components={injectedComponents}
+                    />
+                  </CodeGlobalsContext.Provider>
                 </div>
               </article>
             )}
@@ -107,6 +110,49 @@ const Exercise = ({
       {children}
     </section>
   );
+};
+
+const noop = () => {};
+
+function ajax(
+  url: string,
+  options?: {
+    onSuccess?: (res: any) => void;
+    method?: string;
+    dataType?: string;
+    onError?: (err: any) => void;
+    body?: BodyInit;
+  }
+) {
+  var opts = options || {};
+  var onSuccess = opts.onSuccess || noop;
+  var onError = opts.onError || noop;
+  var dataType = opts.dataType || 'json';
+  var method = opts.method || 'GET';
+
+  var request = new XMLHttpRequest();
+  request.open(method, url);
+  if (dataType === 'json') {
+    request.overrideMimeType('application/json');
+    request.responseType = 'json';
+    request.setRequestHeader('Accept', 'application/json');
+  }
+
+  request.onload = function () {
+    if (request.status >= 200 && request.status < 400) {
+      onSuccess(request.response);
+    } else {
+      onError(request.response);
+    }
+  };
+
+  request.onerror = onError;
+
+  request.send(opts.body);
+}
+
+const globals = {
+  ajax,
 };
 
 const injectedComponents = {

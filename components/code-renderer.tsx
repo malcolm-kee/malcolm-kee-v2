@@ -6,6 +6,7 @@ import nightOwl from 'prism-react-renderer/themes/nightOwl';
 import ReactDOM from 'react-dom';
 import cx from 'classnames';
 import styles from './code-renderer.module.css';
+import { CodeGlobalsContext } from './code-globals';
 
 export interface CodeRendererProps {
   className?: string;
@@ -80,20 +81,62 @@ const CodeLiveEditor = ({
   previewOnly,
   className,
 }: CodeLiveEditorProps) => {
+  const [isEditMode, setIsEditMode] = React.useState(!!previewOnly);
+  const codeGlobals = React.useContext(CodeGlobalsContext);
+  const finalScope = React.useMemo(
+    () => ({
+      ...scope,
+      ...codeGlobals,
+    }),
+    [codeGlobals]
+  );
+
   return (
-    <div className={cx('text-sm', className)}>
-      <LiveProvider
-        code={code}
-        transformCode={language === 'js' ? wrapJsCode : undefined}
-        theme={nightOwl}
-        scope={scope}
-        language="jsx"
-        noInline={language === 'js' ? false : noInline}
-      >
-        {!previewOnly && <LiveEditor className="rounded-md" />}
-        <LiveError />
-        <LivePreview className="p-2 shadow-inner" />
-      </LiveProvider>
+    <div className={cx('shadow-inner p-1', className)}>
+      <div className="flex justify-between py-1">
+        <span></span>
+        <button
+          onClick={() => setIsEditMode(true)}
+          type="button"
+          className={cx('text-sm px-3 focus-ring', isEditMode && 'invisible')}
+        >
+          EDIT
+        </button>
+      </div>
+
+      <div className="text-sm">
+        <LiveProvider
+          code={removeHighlightComment(code)}
+          transformCode={language === 'js' ? wrapJsCode : undefined}
+          theme={nightOwl}
+          scope={finalScope}
+          language="jsx"
+          noInline={language === 'js' ? false : noInline}
+        >
+          {!isEditMode ? (
+            <CodeSnippet
+              language={language as any}
+              code={code}
+              className={styles.snippet}
+            />
+          ) : (
+            !previewOnly && (
+              <LiveEditor
+                className="rounded-md"
+                autoFocus
+                onKeyDown={(ev) => {
+                  if (ev.key === 'Escape') {
+                    setIsEditMode(false);
+                  }
+                }}
+                onBlur={() => setIsEditMode(false)}
+              />
+            )
+          )}
+          <LiveError />
+          <LivePreview className="p-2 shadow-inner" />
+        </LiveProvider>
+      </div>
     </div>
   );
 };
@@ -165,3 +208,22 @@ function shallowConcat<T>(targetArr: T[], item: T) {
   newArr.push(item);
   return newArr;
 }
+
+/**
+ * Sanitize code by removing line start with the following:
+ * - `// highlight-next-line`
+ * - `// highlight-start`
+ * - `// highlight-end`
+ *
+ * The following comments will be remove without removing other character in the same line:
+ * - `// highlight-line`
+ *
+ * @param {string} code
+ */
+export const removeHighlightComment = (code: string) =>
+  typeof code === 'string'
+    ? code.replace(
+        /(^\s*\/\/\s*[highlight\-next\-line|highlight\-start|highlight\-end].*\n?|\/\/\s*highlight-line)/gm,
+        ''
+      )
+    : code;

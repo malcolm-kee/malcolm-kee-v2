@@ -22,13 +22,11 @@ setTimeout(() => console.log('Hi'), 1000);
 
 The code above will log "Hi" to the console after 1 second (1000 miliseconds).
 
-How it works is by passing down a [callback function](/js-the-react-parts/callback-function/), and the callback function will be called later.
+How it works is by passing down a [callback function](/js-the-react-parts/callback-function), and the callback function will be called later.
 
 Now assume we use an utility function `ajax` that allows us to make API calls.
 
-import { ajax } from '../../../src/helper';
-
-```js live
+```js
 // ajax is a function that I write, it's not available in browser automatically
 var result = ajax('https://icanhazdadjoke.com/');
 
@@ -39,7 +37,7 @@ console.log(result);
 
 To get the result of the ajax call, we need to pass callback to `ajax`:
 
-```js live
+```js
 ajax('https://icanhazdadjoke.com/', {
   onSuccess: function (result) {
     console.log(result);

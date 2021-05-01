@@ -21,13 +21,13 @@ In mathematics, function is a relationship between input(s) and an output, like 
 
 Let's say an equation is defined as `f(x) = 2x`. What does it means? We can illustrate it with a graph:
 
-![The graph of f(x) = 2x.](y=2x.png)
+![The graph of f(x) = 2x.](https://res.cloudinary.com/djzsjzasg/image/upload/v1619840447/malcolm-kee/y_2x_jpxiwu.png)
 
 For each value of input (value of x-axis), the function will produce an output (y-axis). For example, input of 2 produces output of 4, input of 10 produces output of 20.
 
 A slightly complex example of function is <code>f(x) = x<sup>2</sup> - 5</code>, which is illustrated below:
 
-![The graph of f(x) = x square - 5.](y=2x2-5.png)
+![The graph of f(x) = x square - 5.](https://res.cloudinary.com/djzsjzasg/image/upload/v1619840447/malcolm-kee/y_2x2-5_jcvbeq.png)
 
 Now I'm not trying to confuse you or teaching you mathematics, but please note the following characteristics of both mathematics function, regardless if it's simple or complex:
 
@@ -110,7 +110,7 @@ function double(x = 1) {
 }
 ```
 
-`double` utilize the default parameter that we've discussed in [previous section](/js-the-react-parts/destructuring#destructuring-in-function-parameter/), therefore it can be invoked without parameter:
+`double` utilize the default parameter that we've discussed in [previous section](/js-the-react-parts/destructuring#destructuring-in-function-parameter), therefore it can be invoked without parameter:
 
 ```javascript
 double(); // 2
@@ -247,7 +247,7 @@ const groupPersonByWeirdness = (persons) => {
 
 ## First Class Function
 
-Another concept in functional programming is "first class function". When we say function is "first class", what we actually means is that they are just like everyone else... which means we treat them just like other data type like number or boolean, e.g. passing them around, storing it in array, assign to parameter etc (a characteristic that we discuss briefly in the [closure section](/js-the-react-parts/closure/)).
+Another concept in functional programming is "first class function". When we say function is "first class", what we actually means is that they are just like everyone else... which means we treat them just like other data type like number or boolean, e.g. passing them around, storing it in array, assign to parameter etc (a characteristic that we discuss briefly in the [closure section](/js-the-react-parts/closure)).
 
 Functional programming utilizes this features to compute function just like how we usually compute data. I would like to introduce you a few more techniques to illustrate what this means.
 
@@ -364,7 +364,7 @@ With those utilities, you can create complex computation and logics.
 
 ## Array Methods from Functional Programming Perspective
 
-Now you have some understanding about function programming, let's review the methods that we learn in [Array Methods](/js-the-react-parts/array-methods/) sections.
+Now you have some understanding about function programming, let's review the methods that we learn in [Array Methods](/js-the-react-parts/array-methods) sections.
 
 - The callback that you pass to `Array.filter`, `Array.map`, and `Array.reduce` should be pure function. Besides, those methods are functional because they don't change the original array. Instead, they always returns a new function.
 - The callback that you pass to `Array.forEach` would not be functional. However, this doesn't mean that you shouldn't avoid using it, sometimes using `forEach` is cleaner than using `reduce`.

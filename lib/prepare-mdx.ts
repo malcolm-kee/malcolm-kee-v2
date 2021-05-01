@@ -5,7 +5,7 @@ import { rehypeMetaAsAttribute } from './rehype-meta-as-attribute';
 
 export const prepareMdx = (
   source: string,
-  options: { files?: Record<string, string> } = {}
+  options: { files?: Record<string, string>; cwd?: string } = {}
 ) => {
   if (process.env.NETLIFY && !process.env.ESBUILD_BINARY_PATH) {
     if (process.platform === 'win32') {
@@ -28,6 +28,7 @@ export const prepareMdx = (
 
   return bundleMDX(source, {
     files: options.files,
+    cwd: options.cwd,
     xdmOptions(_, options) {
       options.remarkPlugins = [...(options.remarkPlugins ?? []), gfm];
       options.rehypePlugins = [

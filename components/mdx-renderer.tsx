@@ -6,6 +6,7 @@ import { CodeRenderer } from './code-renderer';
 export interface MdxRendererProps {
   code: string;
   components?: ComponentMap;
+  globals?: Record<string, unknown>;
 }
 
 const components = {
@@ -34,10 +35,12 @@ const components = {
 export const MdxRenderer = ({
   code,
   components: providedComponents,
+  globals,
 }: MdxRendererProps) => {
-  const Component = React.useMemo(() => (code ? getMDXComponent(code) : null), [
-    code,
-  ]);
+  const Component = React.useMemo(
+    () => (code ? getMDXComponent(code, globals) : null),
+    [code, globals]
+  );
 
   const allComponents = React.useMemo(
     () =>
