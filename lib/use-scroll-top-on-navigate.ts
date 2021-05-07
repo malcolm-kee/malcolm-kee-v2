@@ -17,10 +17,7 @@ export const useScrollTopOnNavigate = <ScrollElement extends HTMLElement>() => {
 
     const scrollElementToTop = () => {
       if (scrollRef.current) {
-        scrollRef.current.scrollTo(
-          0,
-          scrollPositionMap.get(router.asPath) || 0
-        );
+        scrollRef.current.scrollTop = scrollPositionMap.get(router.asPath) || 0;
       }
     };
 

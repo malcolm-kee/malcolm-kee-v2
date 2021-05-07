@@ -1,4 +1,5 @@
 import { Seo } from 'components/seo';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -47,6 +48,32 @@ export default function Home() {
                 <a href="https://twitter.com/Malcolm_Kee">Twitter</a>
               </li>
             </ul>
+          </div>
+          <div className="prose lg:prose-xl prose-green max-w-prose mx-auto py-6">
+            <div className="border-t border-gray-100">
+              <div className="flex items-center space-x-8 lg:justify-between">
+                <p className="text-gray-400 text-2xl sm:text-4xl">
+                  My Writings
+                </p>
+                <ul className="lg:flex lg:items-center lg:justify-end lg:space-x-12">
+                  <li>
+                    <Link href="/workshops">
+                      <a>Workshops</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/blog">
+                      <a>Blog</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/today-i-learnt">
+                      <a>TIL</a>
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </main>

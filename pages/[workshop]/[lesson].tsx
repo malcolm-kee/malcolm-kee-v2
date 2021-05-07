@@ -83,7 +83,7 @@ function WorkshopLesson({
               </article>
             )}
           </main>
-          <nav className="flex justify-between items-center max-w-prose mx-auto">
+          <nav className="flex justify-between items-center py-3 max-w-prose mx-auto">
             {prevLesson ? (
               <Link href={`/${prevLesson.workshop}/${prevLesson.slug}`}>
                 <a className="inline-flex items-center space-x-2 text-2xl text-green-500 hover:underline">
