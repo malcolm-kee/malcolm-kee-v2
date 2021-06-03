@@ -50,7 +50,7 @@ function WorkshopLesson({
             styles.header
           )}
         >
-          <Link href="/">
+          <Link href={`/${params.workshop}`}>
             <a className="text-2xl md:text-3xl">{workshopInfo.name}</a>
           </Link>
         </div>
@@ -239,71 +239,70 @@ type WorkshopData = typeof workshopData;
 type WorkshopName = keyof WorkshopData;
 type LessonInfo = WorkshopData[WorkshopName][number];
 
-export const getStaticProps: GetStaticProps<
-  WorkshopLessonProps,
-  Params
-> = async function getStaticProps({ params }) {
-  if (params) {
-    const lessons = workshopData[params.workshop];
+export const getStaticProps: GetStaticProps<WorkshopLessonProps, Params> =
+  async function getStaticProps({ params }) {
+    if (params) {
+      const lessons = workshopData[params.workshop];
 
-    const lessonIndex = lessons.findIndex(
-      (lesson) => lesson.slug === params.lesson
-    );
+      const lessonIndex = lessons.findIndex(
+        (lesson) => lesson.slug === params.lesson
+      );
 
-    if (lessonIndex > -1) {
-      const filePath = lessons[lessonIndex].path;
+      if (lessonIndex > -1) {
+        const filePath = lessons[lessonIndex].path;
 
-      const pathInfo = path.parse(filePath);
+        const pathInfo = path.parse(filePath);
 
-      const files = await fs.promises.readdir(pathInfo.dir);
-      const jsFiles = files.filter((f) => /\.jsx?$/.test(f));
+        const files = await fs.promises.readdir(pathInfo.dir);
+        const jsFiles = files.filter((f) => /\.jsx?$/.test(f));
 
-      const fileData: Record<string, string> = {};
+        const fileData: Record<string, string> = {};
 
-      for (const jsFile of jsFiles) {
-        const jsFileContent = await fs.promises.readFile(
-          path.resolve(pathInfo.dir, jsFile),
-          'utf-8'
-        );
-        fileData[`./${jsFile}`] = jsFileContent;
+        for (const jsFile of jsFiles) {
+          const jsFileContent = await fs.promises.readFile(
+            path.resolve(pathInfo.dir, jsFile),
+            'utf-8'
+          );
+          fileData[`./${jsFile}`] = jsFileContent;
+        }
+
+        const fileContent = await fs.promises.readFile(filePath, 'utf-8');
+        const mdxResult = await prepareMdx(fileContent, { files: fileData });
+
+        return {
+          props: {
+            mdx: mdxResult,
+            params,
+            allLessons: lessons,
+            prevLesson: lessons[lessonIndex - 1] || null,
+            nextLesson: lessons[lessonIndex + 1] || null,
+          },
+        };
       }
-
-      const fileContent = await fs.promises.readFile(filePath, 'utf-8');
-      const mdxResult = await prepareMdx(fileContent, { files: fileData });
-
-      return {
-        props: {
-          mdx: mdxResult,
-          params,
-          allLessons: lessons,
-          prevLesson: lessons[lessonIndex - 1] || null,
-          nextLesson: lessons[lessonIndex + 1] || null,
-        },
-      };
     }
-  }
 
-  return {
-    props: {},
+    return {
+      props: {},
+    };
   };
-};
 
-export const getStaticPaths: GetStaticPaths<Params> = async function getStaticPaths() {
-  const paths = Object.values(workshopData)
-    .map((lessons) =>
-      lessons.map((lesson) => ({
-        params: {
-          lesson: lesson.slug,
-          workshop: lesson.workshop as WorkshopName,
-        },
-      }))
-    )
-    .flat(2);
+export const getStaticPaths: GetStaticPaths<Params> =
+  async function getStaticPaths() {
+    const paths = Object.values(workshopData)
+      .map((lessons) =>
+        lessons.map((lesson) => ({
+          params: {
+            lesson: lesson.slug,
+            workshop: lesson.workshop as WorkshopName,
+          },
+        }))
+      )
+      .flat(2);
 
-  return {
-    paths,
-    fallback: false,
+    return {
+      paths,
+      fallback: false,
+    };
   };
-};
 
 export default WorkshopLesson;

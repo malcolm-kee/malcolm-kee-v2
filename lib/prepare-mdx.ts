@@ -30,7 +30,7 @@ export const prepareMdx = (
   return bundleMDX(source, {
     files: options.files,
     cwd: options.cwd,
-    xdmOptions(_, options) {
+    xdmOptions(options) {
       options.remarkPlugins = [...(options.remarkPlugins ?? []), gfm];
       options.rehypePlugins = [
         ...(options.rehypePlugins ?? []),
